@@ -1,0 +1,7 @@
+static const struct file_operations lowpan_control_fops = {
+    .open       = lowpan_control_open,
+    .read       = seq_read,
+    .write      = lowpan_control_write,
+    .llseek     = seq_lseek,
+    .release    = single_release,
+};
