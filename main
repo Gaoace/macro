@@ -1,0 +1,16 @@
+/*
+ * The double __builtin_constant_p is because gcc will give us an error
+ * if we try to allocate the static variable to fmt if it is not a
+ * constant. Even with the outer if statement.
+ */
+#define ftrace_vprintk(fmt, vargs)                  \
+do {                                    \
+    if (__builtin_constant_p(fmt)) {                \
+        static const char *trace_printk_fmt __used      \
+          __attribute__((section("__trace_printk_fmt"))) =  \
+            __builtin_constant_p(fmt) ? fmt : NULL;     \
+                                    \
+        __ftrace_vbprintk(_THIS_IP_, trace_printk_fmt, vargs);  \
+    } else                              \
+        __ftrace_vprintk(_THIS_IP_, fmt, vargs);        \
+} while (0)
